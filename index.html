@@ -1,31 +1,475 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSS Envelope + Letter (Open/Close on Click)</title>
-    <link rel="stylesheet" href="index.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Italianno&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday 🎂</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #2c1b3d;
+    --night-top: #1c1030;
+    --night-bottom: #3a2158;
+    --star: #f6ecff;
+    --flame-core: #fff4cf;
+    --flame-mid: #ffb454;
+    --flame-outer: #ff6a3d;
+    --gold: #e7b975;
+    --cream: #fbf3e7;
+    --paper: #fffaf1;
+    --rose: #d98a9c;
+    --sage: #93a685;
+    --line: rgba(44,27,61,0.14);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:'Inter', sans-serif;
+    color:var(--ink);
+    overflow:hidden;
+  }
+  .page{
+    position:fixed;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:opacity 1.1s ease, filter 1.1s ease;
+  }
+
+  /* ---------------- PAGE 1 : CANDLE ---------------- */
+  #page-candle{
+    background: radial-gradient(ellipse at 50% 20%, #4a2a68 0%, var(--night-top) 45%, var(--night-bottom) 100%);
+    flex-direction:column;
+    text-align:center;
+  }
+  .stars{position:absolute; inset:0; overflow:hidden;}
+  .star{
+    position:absolute; background:var(--star); border-radius:50%;
+    opacity:0.7; animation:twinkle 3.2s ease-in-out infinite;
+  }
+  @keyframes twinkle{ 0%,100%{opacity:.25;} 50%{opacity:.9;} }
+
+  .wish-text{
+    font-family:'Caveat', cursive;
+    font-style: italic;
+    font-weight:600;
+    font-size:clamp(2.4rem, 6vw, 3.6rem);
+    color:var(--star);
+    margin:0 0 6px 0;
+    letter-spacing:0.5px;
+    text-shadow: 0 0 18px rgba(255,200,140,0.35);
+  }
+  .wish-sub{
+    color: rgba(246,236,255,0.65);
+    font-size:0.85rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    margin-bottom:34px;
+  }
+
+  .scene{ position:relative; z-index:2; }
+
+  .candle-wrap{ position:relative; display:inline-block; }
+
+  .flame{
+    position:absolute;
+    left:50%;
+    bottom:100%;
+    width:26px;
+    height:58px;
+    transform-origin:50% 100%;
+    transform:translateX(-50%);
+    filter: drop-shadow(0 0 14px rgba(255,150,60,0.75));
+    animation: flicker 2.4s ease-in-out infinite;
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  .flame svg{ width:100%; height:100%; display:block; }
+  @keyframes flicker{
+    0%,100%{ transform:translateX(-50%) rotate(-2deg) scaleY(1); }
+    25%{ transform:translateX(-50%) rotate(2deg) scaleY(1.05); }
+    50%{ transform:translateX(-50%) rotate(-1deg) scaleY(0.96); }
+    75%{ transform:translateX(-50%) rotate(3deg) scaleY(1.03); }
+  }
+  .flame.out{ opacity:0; transform:translateX(-50%) scaleY(0.2); }
+
+  .smoke{
+    position:absolute; left:50%; bottom:100%;
+    width:6px; height:6px; border-radius:50%;
+    background:rgba(230,225,235,0.55);
+    transform:translateX(-50%);
+    opacity:0; pointer-events:none;
+  }
+  .smoke.go{ animation: rise 1.6s ease-out forwards; }
+  @keyframes rise{
+    0%{ opacity:0.7; transform:translate(-50%,0) scale(1); }
+    100%{ opacity:0; transform:translate(-50%,-70px) scale(4); }
+  }
+
+  .candle{
+    width:22px; height:110px;
+    margin:0 auto;
+    background:linear-gradient(180deg, #fff 0%, #f4e6ce 100%);
+    border-radius:4px 4px 2px 2px;
+    box-shadow: inset -4px 0 6px rgba(0,0,0,0.07), 0 6px 18px rgba(0,0,0,0.25);
+    position:relative;
+  }
+  .candle::before{
+    content:'';
+    position:absolute; top:-3px; left:9px;
+    width:4px; height:8px; background:#5a4230; border-radius:1px;
+  }
+  .stripe{ position:absolute; left:0; right:0; height:8px; background:var(--rose); opacity:0.55; }
+
+  .cake{
+    width:230px; height:120px;
+    margin:0 auto;
+    position:relative;
+  }
+  .tier{
+    position:absolute; left:50%; transform:translateX(-50%);
+    border-radius:14px 14px 8px 8px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+  }
+  .tier.top{ width:150px; height:56px; bottom:64px; background:linear-gradient(180deg,#fff4e0,#f0d8b0); }
+  .tier.bottom{ width:230px; height:70px; bottom:0; background:linear-gradient(180deg,#f7e2c2,#e6c393); }
+  .drip{
+    position:absolute; bottom:-6px; width:14px; height:16px; border-radius:0 0 10px 10px;
+    background:var(--rose);
+  }
+  .icing{
+    position:absolute; top:-6px; left:0; right:0; height:14px; border-radius:10px;
+    background:#fff; box-shadow:0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .instructions{
+    margin-top:42px;
+    color: rgba(246,236,255,0.85);
+    font-size:0.95rem;
+  }
+  .mic-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:9px 16px; border-radius:999px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.18);
+    font-size:0.85rem;
+    margin-top:14px;
+  }
+  .mic-dot{ width:8px; height:8px; border-radius:50%; background:var(--sage); transition:all .1s ease; }
+  .mic-dot.hot{ background:var(--flame-outer); box-shadow:0 0 8px var(--flame-outer); }
+
+  .tap-fallback{
+    margin-top:16px; background:none; border:1px solid rgba(255,255,255,0.3);
+    color:rgba(246,236,255,0.85); padding:8px 18px; border-radius:999px;
+    font-family:'Inter'; font-size:0.82rem; cursor:pointer;
+    transition:background .2s ease, transform .15s ease;
+  }
+  .tap-fallback:hover{ background:rgba(255,255,255,0.12); transform:translateY(-1px); }
+
+  .spark{
+    position:absolute; width:4px; height:4px; border-radius:50%;
+    background:var(--gold); opacity:0;
+  }
+  .spark.go{ animation: pop 0.9s ease-out forwards; }
+  @keyframes pop{
+    0%{ opacity:1; transform:translate(0,0) scale(1); }
+    100%{ opacity:0; transform:translate(var(--dx), var(--dy)) scale(0.3); }
+  }
+
+  /* ---------------- PAGE 2 : LETTER ---------------- */
+  #page-letter{
+    background: radial-gradient(ellipse at 50% 0%, #fff9ef 0%, var(--cream) 60%, #f5e7d3 100%);
+    opacity:0; pointer-events:none; flex-direction:column;
+    padding: 6vh 20px;
+  }
+  #page-letter.show{ opacity:1; pointer-events:auto; }
+
+  .letter-shell{
+    width:min(560px, 92vw);
+    max-height:92vh;
+    display:flex; flex-direction:column;
+    align-items:center;
+    overflow-y:auto;
+    padding: 4px 4px 40px;
+  }
+  .letter-shell::-webkit-scrollbar{ width:6px; }
+  .letter-shell::-webkit-scrollbar-thumb{ background:var(--line); border-radius:6px; }
+
+  .eyebrow{
+    font-size:0.72rem; letter-spacing:0.22em; text-transform:uppercase;
+    color:var(--rose); margin-bottom:6px;
+  }
+  .letter-title{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(1.8rem,4.6vw,2.4rem);
+    margin:0 0 26px 0;
+    text-align:center;
+  }
+
+  .card{
+    width:100%;
+    background:var(--paper);
+    border-radius:6px;
+    box-shadow: 0 18px 40px -14px rgba(60,30,20,0.25), 0 2px 6px rgba(60,30,20,0.06);
+    padding: 30px 30px 26px;
+    position:relative;
+    margin-bottom:32px;
+  }
+  .card::before{
+    content:'';
+    position:absolute; left:0; top:0; bottom:0; width:44px;
+    background:repeating-linear-gradient(
+      45deg, transparent, transparent 5px, rgba(217,138,156,0.10) 5px, rgba(217,138,156,0.10) 6px
+    );
+    border-radius:6px 0 0 6px;
+    opacity:0.5;
+  }
+  .letter-body{
+    font-family:'Caveat', cursive;
+    font-size:1.55rem;
+    line-height:1.85;
+    color:#3a2a20;
+    min-height:260px;
+    padding-left:20px;
+    white-space:pre-wrap;
+  }
+
+  .playlist-section{
+    width:100%;
+    text-align:center;
+  }
+  .spotify-frame-wrap{
+    width:100%; border-radius:14px; overflow:hidden;
+    box-shadow:0 14px 30px -16px rgba(60,30,20,0.3);
+    margin-bottom:16px;
+  }
+  .spotify-frame-wrap iframe{ display:block; width:100%; border:none; }
+
+  .playlist-caption{
+    font-family:'Caveat', cursive;
+    font-style:italic;
+    font-weight:600;
+    font-size:1.7rem;
+    color:var(--rose);
+    margin-top:6px;
+  }
+
+  @media (max-width:480px){
+    .cake{ transform:scale(0.85); }
+    .card{ padding:24px 20px; }
+  }
+</style>
 </head>
 <body>
-    <body>
-        <div class="wrapper">
-          <div class="lid one"></div>
-          <div class="lid two"></div>
-          <div class="envelope"></div>
-          <div class="letter">
-            <p>
-                To my dear Carol.<br>
 
-                Happy birthday bestie🎉🥳, Today is the day a beautiful queen was born. I really wish you more great years ahead and I pray you achieve every thing you've ever wanted in life.  Aki you're the best person I've ever met this year. You are sooo amazing and I really hope what we have right now doesn't fade forever. Let us get our money and I'll be spoiling you so much baby. I want to explore this whole world with you juu you are so fun to be around walai.🍾🥂 Cheers to more life of happiness, money and exploring<br>
-              
-            </p>
-          </div>
+<div class="page" id="page-candle">
+  <div class="stars" id="stars"></div>
+
+  <div class="scene">
+    <div class="wish-text">make a wish</div>
+    <div class="wish-sub">and blow out the candle</div>
+
+    <div class="cake">
+      <div class="candle-wrap" style="position:absolute; left:50%; top:-70px; transform:translateX(-50%);">
+        <div class="flame" id="flame">
+          <svg viewBox="0 0 26 58">
+            <defs>
+              <radialGradient id="flameGrad" cx="50%" cy="70%" r="70%">
+                <stop offset="0%" stop-color="var(--flame-core)"/>
+                <stop offset="45%" stop-color="var(--flame-mid)"/>
+                <stop offset="100%" stop-color="var(--flame-outer)"/>
+              </radialGradient>
+            </defs>
+            <path d="M13 0 C 20 16, 26 26, 18 38 C 24 34, 24 48, 13 58 C 2 48, 2 34, 8 38 C 0 26, 6 16, 13 0 Z" fill="url(#flameGrad)"/>
+          </svg>
         </div>
-      </body>
-</body>
+        <div class="smoke" id="smoke"></div>
+        <div class="candle">
+          <div class="stripe" style="top:20px;"></div>
+          <div class="stripe" style="top:50px;"></div>
+          <div class="stripe" style="top:80px;"></div>
+        </div>
+      </div>
 
+      <div class="tier top"><div class="icing"></div></div>
+      <div class="tier bottom">
+        <div class="icing"></div>
+        <div class="drip" style="left:20px;"></div>
+        <div class="drip" style="left:70px; height:12px;"></div>
+        <div class="drip" style="left:130px; height:20px;"></div>
+        <div class="drip" style="left:190px; height:10px;"></div>
+      </div>
+    </div>
+
+    <div class="instructions">
+      Blow gently into your microphone 🎙️
+      <div class="mic-badge">
+        <span class="mic-dot" id="micDot"></span>
+        <span id="micStatus">waiting for microphone…</span>
+      </div>
+      <div>
+        <button class="tap-fallback" id="tapFallback">or tap here to blow it out</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-letter">
+  <div class="letter-shell">
+    <div class="eyebrow">happy birthday</div>
+    <h1 class="letter-title">A little something for you</h1>
+
+    <div class="card">
+      <!--
+        ✏️ WRITE YOUR LETTER HERE.
+        Just type/paste your text between the <div> tags below.
+        Press Enter for a new line — line breaks are preserved automatically.
+      -->
+      <div class="letter-body" id="letterBody">Heey Twin, happy birthday to us🥳 I am so glad to have met you and that we realised we share the same 
+        birthday.I literally never remembered my birthday or cared about it before we met but now I look forward to it every year because of you. I hope we'll enjoy it together some day. Have a wonderful day and that this year brings you all the happiness and success you deserve.
+
+</div>
+    </div>
+
+    <div class="playlist-section">
+      <!--
+        🎵 SET YOUR PLAYLIST HERE.
+        1. Open the playlist in Spotify (app or web).
+        2. Click "..." → Share → Copy link to playlist.
+        3. Grab the ID from that link (the part after /playlist/ and before any "?")
+           and paste it below in place of PLAYLIST_ID_HERE.
+        The songs then play right here in an embedded player — no redirect to Spotify.
+      -->
+      <div class="spotify-frame-wrap show" id="spotifyWrap">
+        <iframe id="spotifyIframe"
+          src="https://open.spotify.com/embed/playlist/3VxODByb9iHUZdMeaOobqI?utm_source=generator&theme=0"
+          height="352"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"></iframe>
+      </div>
+      <div class="playlist-caption">playlist for you</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---------- stars ----------
+  const starsEl = document.getElementById('stars');
+  for(let i=0;i<70;i++){
+    const s = document.createElement('div');
+    s.className='star';
+    const size = Math.random()*2+1;
+    s.style.width = size+'px';
+    s.style.height = size+'px';
+    s.style.left = Math.random()*100+'%';
+    s.style.top = Math.random()*70+'%';
+    s.style.animationDelay = (Math.random()*3)+'s';
+    starsEl.appendChild(s);
+  }
+
+  // ---------- elements ----------
+  const flame = document.getElementById('flame');
+  const smoke = document.getElementById('smoke');
+  const micDot = document.getElementById('micDot');
+  const micStatus = document.getElementById('micStatus');
+  const tapFallback = document.getElementById('tapFallback');
+  const pageCandle = document.getElementById('page-candle');
+  const pageLetter = document.getElementById('page-letter');
+  const scene = document.querySelector('.scene');
+
+  let blownOut = false;
+
+  function spawnSparks(){
+    for(let i=0;i<16;i++){
+      const sp = document.createElement('div');
+      sp.className='spark';
+      const angle = Math.random()*Math.PI*2;
+      const dist = 40+Math.random()*60;
+      sp.style.setProperty('--dx', Math.cos(angle)*dist+'px');
+      sp.style.setProperty('--dy', Math.sin(angle)*dist+'px');
+      sp.style.left = '50%';
+      sp.style.top = '-70px';
+      sp.style.background = ['#ffd27a','#ff9d6c','#ffe9b0'][i%3];
+      scene.appendChild(sp);
+      requestAnimationFrame(()=> sp.classList.add('go'));
+      setTimeout(()=> sp.remove(), 1000);
+    }
+  }
+
+  function blowOutCandle(){
+    if(blownOut) return;
+    blownOut = true;
+    flame.classList.add('out');
+    smoke.classList.add('go');
+    spawnSparks();
+    micStatus.textContent = 'candle blown out 🎉';
+
+    setTimeout(()=>{
+      pageCandle.style.opacity = '0';
+      pageLetter.classList.add('show');
+      setTimeout(()=> pageCandle.style.display='none', 1100);
+    }, 1400);
+  }
+
+  tapFallback.addEventListener('click', blowOutCandle);
+
+  // ---------- microphone blow detection ----------
+  async function initMic(){
+    try{
+      const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+      micStatus.textContent = 'listening… blow now!';
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const source = audioCtx.createMediaStreamSource(stream);
+      const analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 1024;
+      analyser.smoothingTimeConstant = 0.6;
+      source.connect(analyser);
+
+      const data = new Uint8Array(analyser.fftSize);
+      const BLOW_THRESHOLD = 0.16;   // volume level considered a "blow"
+      const HOLD_FRAMES = 4;         // consecutive loud frames needed
+      let hotFrames = 0;
+
+      function loop(){
+        if(blownOut) return;
+        analyser.getByteTimeDomainData(data);
+        let sumSquares = 0;
+        for(let i=0;i<data.length;i++){
+          const v = (data[i]-128)/128;
+          sumSquares += v*v;
+        }
+        const rms = Math.sqrt(sumSquares/data.length);
+
+        // live flame feedback
+        const bend = Math.min(rms*220, 30);
+        const shrink = Math.max(1 - rms*1.6, 0.55);
+        flame.style.transform = `translateX(-50%) rotate(${bend}deg) scaleY(${shrink})`;
+
+        if(rms > BLOW_THRESHOLD){
+          hotFrames++;
+          micDot.classList.add('hot');
+        } else {
+          hotFrames = Math.max(0, hotFrames-1);
+          micDot.classList.remove('hot');
+        }
+
+        if(hotFrames >= HOLD_FRAMES){
+          blowOutCandle();
+          return;
+        }
+        requestAnimationFrame(loop);
+      }
+      loop();
+    }catch(err){
+      micStatus.textContent = 'mic unavailable — use the tap button below';
+    }
+  }
+  initMic();
+
+
+</script>
+</body>
 </html>
